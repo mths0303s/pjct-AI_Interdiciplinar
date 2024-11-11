@@ -1,14 +1,12 @@
 import chromadb
-from openai import OpenAI
+from litellm import completion
 
-api_key = "Coloque sua chave API"
-client = OpenAI(api_key=api_key)
 
 while True:
     questao = input("Como posso lhe ajudar?\nDigite 'sair' para encerrar.\n\n")
 
     if questao.lower() == "sair":
-        print("\n\nObrigado por usar o assistente do Restaurante Sabores! Até a próxima!")
+        print("\n\nObrigado por usar o assistente da Kumstore! Até a próxima!")
         break
 
     chroma_client = chromadb.Client()
@@ -22,20 +20,22 @@ while True:
         conteudo = "Desculpe, mas não consigo ajudar. Você Tem alguma outra pergunta?"
 
     prompt = """
-    Você é um assistente educado e útil do Restaurante Sabores.
+    Você é um assistente educado e útil do E-commerce da Kumstore.
     Use o seguinte contexto para responder a questão, não use nenhuma informação adicional, se não houver informação no contexto, responda: Desculpe mas não consigo ajudar com isso.
     Depois de responder a pergunta, diga: Fico feliz por você ter usado nossos serviços, se houver mais dúvidas, sinta-se à vontade para perguntar.
     """
 
-    completion = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+    response = completion(
+        model="ollama/llama3.1:8b", 
         messages=[
-            {"role": "system", "content": prompt},
-            {"role": "system", "content": conteudo},
-            {"role": "user", "content": questao},
-        ],
+                {"role": "system", "content": prompt},
+                {"role": "system", "content": conteudo},
+                {"role": "user", "content": questao},
+            ], 
+        api_base="http://localhost:11434"
     )
 
-    answer = completion.choices[0].message.content
+
+    answer = response['choices'][0]['message']['content']
 
     print("\n\n",answer,"\n\n")

@@ -22,7 +22,7 @@ def quebra_texto(texto, pedaco_tamanho=1000, sobrepor=200):
 
 
 
-with open("texto.txt", "r", encoding="utf-8") as file:
+with open("FAQ.txt", "r", encoding="utf-8") as file:
     texto = file.read()
 
 pedacos = quebra_texto(texto)
